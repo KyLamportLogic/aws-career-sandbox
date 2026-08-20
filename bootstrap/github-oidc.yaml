@@ -1,0 +1,178 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  One-time trust bootstrap for the zero-runtime-capacity AWS career sandbox.
+  Creates or reuses GitHub OIDC, a protected-environment deploy role, and the
+  constrained policy used by the CDK CloudFormation execution role.
+
+Parameters:
+  ExistingGitHubOidcProviderArn:
+    Type: String
+    Default: ""
+    Description: >-
+      Optional existing account GitHub OIDC provider ARN. Leave blank in a clean
+      account; set it when migrating the provider already owned by another stack.
+
+Conditions:
+  CreateGitHubOidcProvider: !Equals [!Ref ExistingGitHubOidcProviderArn, ""]
+
+Resources:
+  GitHubOidc:
+    Type: AWS::IAM::OIDCProvider
+    Condition: CreateGitHubOidcProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      Tags:
+        - Key: Project
+          Value: BuildLogic
+        - Key: Environment
+          Value: career-sandbox
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  CareerSandboxCfnExecution:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: BuildlogicCareerSandboxCdkExecutionPolicy
+      Description: Career sandbox execution policy with zero-runtime-capacity denies
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowBoundedSandboxResources
+            Effect: Allow
+            Action:
+              - budgets:CreateBudget
+              - budgets:DeleteBudget
+              - budgets:DescribeBudget
+              - budgets:ModifyBudget
+              - ce:CreateAnomalyMonitor
+              - ce:CreateAnomalySubscription
+              - ce:DeleteAnomalyMonitor
+              - ce:DeleteAnomalySubscription
+              - ce:GetAnomalyMonitors
+              - ce:GetAnomalySubscriptions
+              - ce:UpdateAnomalyMonitor
+              - ce:UpdateAnomalySubscription
+              - ecr:CreateRepository
+              - ecr:DeleteLifecyclePolicy
+              - ecr:DeleteRepository
+              - ecr:DescribeRepositories
+              - ecr:GetLifecyclePolicy
+              - ecr:ListTagsForResource
+              - ecr:PutImageScanningConfiguration
+              - ecr:PutImageTagMutability
+              - ecr:PutLifecyclePolicy
+              - ecr:SetRepositoryPolicy
+              - ecr:TagResource
+              - ecr:UntagResource
+              - ecs:DeregisterTaskDefinition
+              - ecs:DescribeTaskDefinition
+              - ecs:RegisterTaskDefinition
+              - iam:CreateRole
+              - iam:DeleteRole
+              - iam:DeleteRolePolicy
+              - iam:GetRole
+              - iam:GetRolePolicy
+              - iam:ListAttachedRolePolicies
+              - iam:ListRolePolicies
+              - iam:ListRoleTags
+              - iam:PutRolePolicy
+              - iam:TagRole
+              - iam:UntagRole
+              - iam:UpdateAssumeRolePolicy
+              - iam:UpdateRoleDescription
+              - logs:CreateLogGroup
+              - logs:DeleteLogGroup
+              - logs:DescribeLogGroups
+              - logs:ListTagsForResource
+              - logs:PutRetentionPolicy
+              - logs:TagResource
+              - logs:UntagResource
+            Resource: "*"
+          - Sid: PassOnlySandboxTaskRoles
+            Effect: Allow
+            Action: iam:PassRole
+            Resource: !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/BuildlogicPracticeCompute-*"
+            Condition:
+              StringEquals:
+                iam:PassedToService: ecs-tasks.amazonaws.com
+          - Sid: DenyRuntimeCapacityAndProductInfrastructure
+            Effect: Deny
+            Action:
+              - ecs:CreateService
+              - ecs:UpdateService
+              - ecs:DeleteService
+              - ecs:RunTask
+              - ecs:StartTask
+              - ec2:CreateVpc
+              - ec2:CreateNatGateway
+              - ec2:CreateSubnet
+              - ec2:CreateInternetGateway
+              - ec2:AttachInternetGateway
+              - ec2:CreateRoute
+              - elasticloadbalancing:*
+              - rds:*
+              - elasticache:*
+              - secretsmanager:CreateSecret
+              - secretsmanager:GetSecretValue
+              - secretsmanager:BatchGetSecretValue
+              - bedrock:*
+              - bedrock-runtime:*
+              - bedrock-agent:*
+              - bedrock-agentcore:*
+              - route53:ChangeResourceRecordSets
+              - route53:CreateHostedZone
+              - route53domains:*
+            Resource: "*"
+
+  GitHubCdkDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: BuildlogicCareerSandboxGitHubDeployRole
+      Description: GitHub OIDC role for approval-gated career sandbox CDK deploys
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !If
+                - CreateGitHubOidcProvider
+                - !GetAtt GitHubOidc.Arn
+                - !Ref ExistingGitHubOidcProviderArn
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                "token.actions.githubusercontent.com:aud": sts.amazonaws.com
+                "token.actions.githubusercontent.com:sub": "repo:KyLamportLogic/aws-career-sandbox:environment:aws-career-sandbox"
+      Policies:
+        - PolicyName: AssumeOnlyCareerSandboxCdkRoles
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: sts:AssumeRole
+                Resource:
+                  - !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}"
+                  - !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+                  - !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-image-publishing-role-${AWS::AccountId}-${AWS::Region}"
+                  - !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}"
+      Tags:
+        - Key: Project
+          Value: BuildLogic
+        - Key: Environment
+          Value: career-sandbox
+        - Key: ManagedBy
+          Value: CloudFormation
+
+Outputs:
+  GitHubOidcProviderArn:
+    Value: !If
+      - CreateGitHubOidcProvider
+      - !GetAtt GitHubOidc.Arn
+      - !Ref ExistingGitHubOidcProviderArn
+  GitHubCdkDeployRoleArn:
+    Value: !GetAtt GitHubCdkDeployRole.Arn
+  CfnExecutionPolicyArn:
+    Value: !Ref CareerSandboxCfnExecution

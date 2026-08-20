@@ -1,0 +1,28 @@
+{
+  "intent": "Publish and verify a zero-runtime-capacity AWS career sandbox with human-approved GitHub OIDC deployment",
+  "scope": ["bootstrap/", "bin/", "lib/", "test/", ".github/workflows/", "docs/"],
+  "source_limitations": [
+    "No agent may run cdk bootstrap or cdk deploy",
+    "No ECS service or task execution, VPC, load balancer, database, cache, secret, DNS mutation, or Bedrock resource",
+    "No static AWS key or environment secret",
+    "The one-time trust and CDK bootstrap ceremony belongs to the human operator"
+  ],
+  "logic_constraints": [
+    "Fail closed unless repository, audience, and protected environment subject match exactly",
+    "Only the deployment job receives id-token write",
+    "The deployment job cannot begin before GitHub environment approval",
+    "Every deploy records identity, diff, outputs, stack descriptions, actor, SHA, and workflow run"
+  ],
+  "agent_attribution": {"agent": "OpenAI Codex", "author": "AI agent working for KyPython"},
+  "kill_switch": {
+    "checked": true,
+    "state": "no_agent_aws_mutation",
+    "mechanisms": ["disable GitHub environment", "disable workflow", "delete deploy role"],
+    "fail_closed_when_missing_or_invalid": true
+  },
+  "external_authority": "user_explicit_request",
+  "fallback_strategy": "abort",
+  "risk_level": 0.3,
+  "issued_at": "2026-08-20T07:00:00-04:00",
+  "ttl_seconds": 86400
+}

@@ -1,0 +1,14 @@
+{
+  "type": "SYSTEMS_THINKING_CONTRACT",
+  "title": "Approval-gated public AWS career sandbox",
+  "scope": ["bootstrap/", "bin/", "lib/", "test/", ".github/workflows/", "docs/"],
+  "event": "A locally deployed private career sandbox used administrator-backed CDK bootstrap and could not enforce public-repository environment reviewers.",
+  "pattern": "Cloud learning evidence alternated between synth-only artifacts and locally credentialed deployment, neither proving a protected CI identity path.",
+  "structure": "GitHub environment approval delays token issuance; an exact OIDC subject limits identity; a constrained CloudFormation execution policy limits capacity; the public repository makes reviewer enforcement available.",
+  "archetype": "Shifting the Burden: local administrator credentials accelerate one deploy while weakening the durable approval and audit system.",
+  "intervention": "Make the public repository canonical, reuse or create account OIDC in a one-time human ceremony, constrain CDKToolkit, issue deployment identity only after environment approval, and deny all running/product infrastructure.",
+  "leading_indicators": "Tests prove exact trust, manual-only workflow, deploy-job-only OIDC, pinned actions, serialized changes, audit artifacts, and zero synthesized runtime capacity.",
+  "transfer": "For consequential automation, place approval in the identity issuance path and enforce the workload boundary again in the downstream execution policy.",
+  "date": "2026-08-20",
+  "agent": "OpenAI Codex"
+}
