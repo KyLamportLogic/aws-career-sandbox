@@ -9,7 +9,7 @@
     "cdk": "cdk",
     "synth": "cdk synth --strict",
     "validate": "npm run doctor && npm run typecheck && npm test && npm run synth",
-    "doctor": "npm exec --yes --package=github:KyLamportLogic/buildlogic-governance#b9535db9c659e4c9212abd375fece57c1885e64b -- engineering-doctor"
+    "doctor": "npm exec --yes --package=https://github.com/KyLamportLogic/buildlogic-governance/archive/b9535db9c659e4c9212abd375fece57c1885e64b.tar.gz -- engineering-doctor"
   },
   "dependencies": {
     "aws-cdk-lib": "^2.266.0",
