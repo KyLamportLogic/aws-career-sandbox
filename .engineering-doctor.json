@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "literalGlobFilenames": true,
+  "temporaryFiles": [
+    "apply-formal-precision-fixes.sh",
+    "**/apply-formal-precision-fixes.sh"
+  ],
+  "nonPlaceholderTestScopes": [
+    "test"
+  ]
+}
