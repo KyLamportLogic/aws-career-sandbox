@@ -1,0 +1,12 @@
+{
+  "type": "SYSTEMS_THINKING_CONTRACT",
+  "title": "Enforce shared AI governance gate",
+  "scope": [".github/", "AGENTS.md"],
+  "event": "AI coding agents (Kiro, Codex, Cursor, Grok Bot) open PRs in this repository.",
+  "pattern": "Governance rules lived only in LamportLogic, so agent changes elsewhere could merge without the same checks.",
+  "structure": "Each repository carried its own partial CI; there was no shared, versioned gate or required check binding agents to the rules.",
+  "archetype": "Shifting the Burden: per-repo manual review compensates for a missing structural gate.",
+  "intervention": "Call the SHA-pinned reusable workflow from KyPython/ai-governance and require its verdict check plus code-owner approval on main.",
+  "leading_indicators": "Every PR shows a green or red 'ai-governance / verdict' check; no merge to main without it and Ky's approval.",
+  "transfer": "Opt any repository in with ai-governance/scripts/optin.sh so all agent-touched repos share one gate."
+}
