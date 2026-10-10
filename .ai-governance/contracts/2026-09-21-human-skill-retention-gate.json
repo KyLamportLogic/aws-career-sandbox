@@ -1,0 +1,17 @@
+{
+  "id": "2026-09-21-human-skill-retention-gate",
+  "marker": "HUMAN_SKILL_RETENTION_GATE",
+  "intent": "Preserve verified human QA/evaluation/reconciliation/documentation/ambiguity-resolution capabilities while allowing mechanical AI execution.",
+  "failClosed": true,
+  "formula": "TaskGate = 1 if C = ∅ else min_{c∈C}(H_c * J_c * E_c * (1 - A_c))",
+  "passCondition": "TaskGate = 1",
+  "constraints": [
+    "AI may not be sole/final authority for any protected capability.",
+    "Human first substantive pass is required for each triggered protected capability.",
+    "Human final judgment is required for each triggered protected capability.",
+    "At least one evidence reference is required for each triggered protected capability.",
+    "AI may not author the human attestation fields.",
+    "Sub-agents inherit and may not weaken this contract."
+  ],
+  "policyRef": "config/human-skill-retention.json"
+}
