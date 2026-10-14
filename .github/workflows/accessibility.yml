@@ -1,0 +1,25 @@
+# Accessibility + diff-hygiene gate (grace mode during rollout).
+# Consumes shared reusable workflows from KyLamportLogic/buildlogic-governance.
+# This repo declares ui:false (.a11y.yml); accessibility passes trivially,
+# diff-hygiene still enforces minimal-diff discipline. Additive to deploy.yml.
+name: Accessibility
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  level-a:
+    uses: KyLamportLogic/buildlogic-governance/.github/workflows/accessibility.reusable.yml@spec/accessibility-enforcement
+    with:
+      governance-ref: spec/accessibility-enforcement
+
+  diff-hygiene:
+    uses: KyLamportLogic/buildlogic-governance/.github/workflows/diff-hygiene.reusable.yml@spec/accessibility-enforcement
+    with:
+      governance-ref: spec/accessibility-enforcement

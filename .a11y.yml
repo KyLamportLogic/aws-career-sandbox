@@ -1,0 +1,4 @@
+# Accessibility gate config — WCAG 2.2 Level A.
+# AWS CDK sandbox app. Serves no web interface.
+ui: false
+rationale: "Infrastructure sandbox (AWS CDK: bin/lib/cdk.json). No web UI. If this repo ever serves a site or dashboard, flip to ui:true and declare its build/preview/urls."
