@@ -8,7 +8,8 @@
     "typecheck": "tsc --noEmit",
     "cdk": "cdk",
     "synth": "cdk synth --strict",
-    "validate": "npm run typecheck && npm test && npm run synth"
+    "validate": "npm run doctor && npm run typecheck && npm test && npm run synth",
+    "doctor": "npm exec --yes --package=https://github.com/KyLamportLogic/buildlogic-governance/archive/b9535db9c659e4c9212abd375fece57c1885e64b.tar.gz -- engineering-doctor"
   },
   "dependencies": {
     "aws-cdk-lib": "^2.266.0",
