@@ -1,3 +1,5 @@
+Follow AGENTS.md.
+
 # Claude Repository Instructions
 
 This repository follows the nearest project governance and human-agency rules.

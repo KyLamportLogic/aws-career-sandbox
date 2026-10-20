@@ -1,0 +1,18 @@
+{
+  "type": "SYSTEMS_THINKING_CONTRACT",
+  "title": "Human skill retention gate",
+  "scope": [
+    ".github/workflows/human-skill-retention.yml",
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".cursor/rules/",
+    "scripts/validate-human-skill-retention.mjs"
+  ],
+  "event": "AI agents can finish protected human work without a recorded human first pass and final judgment.",
+  "pattern": "A green mechanical check is treated as if the protected skill was practiced.",
+  "structure": "Agent instruction files and CI did not share one retention rule or a validator for it.",
+  "archetype": "Shifting the Burden: the tool's completion replaces the human repetition the skill requires.",
+  "intervention": "Publish the retention rule on every required agent surface and validate the config from a pinned, read-only workflow.",
+  "leading_indicators": "The workflow exits 0 only when all 23 protected capabilities keep human first pass, final judgment, and evidence, and AI final authority stays false.",
+  "transfer": "The same marker and validator pattern can guard other repositories that list protected capabilities."
+}
