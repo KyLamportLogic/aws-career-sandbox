@@ -52,3 +52,7 @@ Agents never merge, approve, or deploy their own work.
 10. **Supply chain.** Pin third-party GitHub Actions to a full commit SHA. Every workflow declares a least-privilege `permissions:` block. Untrusted event data (PR title, body, branch name) goes through `env:` and is never spliced into `run:` scripts.
 11. **Human judgment stays human.** Do not invent users, traction, metrics, or personal facts. Stop and hand formative, consequential (irreversible), and authorship decisions to Ky.
 12. **Deploys follow governance.** Deploy jobs run only from `main` after CI/governance passed: `workflow_run` on success, same-repo `push` events only, never fork PR code with secrets.
+
+## Repository safety boundary
+
+This portfolio assembly has no running workload requirement. Validation is credential-free and may only synthesize templates with context lookups disabled. Deployment remains workflow_dispatch only, from the protected main revision, by Ky, through the existing protected human environment, after the required validate and authoritative ai-governance / verdict checks succeed for that exact revision. Agents never dispatch deployment or bootstrap AWS. No automatic deployment is authorized.

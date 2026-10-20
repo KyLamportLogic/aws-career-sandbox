@@ -47,11 +47,13 @@ jobs:
   deploy:
     name: Human-approved OIDC deployment
     needs: validate
+    if: github.ref == 'refs/heads/main' && github.actor == 'KyPython'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     environment: aws-career-sandbox
     permissions:
       contents: read
+      checks: read
       id-token: write
     steps:
       - name: Checkout
@@ -65,6 +67,14 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Setup Python for exact-revision CI evidence
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+      - name: Verify required checks for the exact protected source revision
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/verify_deployment_checks.py
       - name: Assume protected deployment role
         uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
         with:

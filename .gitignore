@@ -2,3 +2,9 @@ node_modules
 cdk.out
 *.tsbuildinfo
 .cdk.staging
+
+# Generated scoped validation evidence and provisioned public test tools
+.quality-results/
+.quality-tools/
+__pycache__/
+*.pyc

@@ -1,0 +1,24 @@
+{
+  "type": "SYSTEMS_THINKING_CONTRACT",
+  "scope": [
+    ".github/",
+    "AGENTS.md",
+    ".quality/",
+    "docs/quality-evidence.md",
+    "scripts/",
+    "test/",
+    "controller/tests/",
+    ".gitignore"
+  ],
+  "event": "Existing CI did not bind all eight quality dimensions to actual source-scoped command results.",
+  "pattern": "A green narrow check can be mistaken for product readiness or fail to constrain a separate governance verdict.",
+  "structure": "A pinned maintained runner executes actual declared checks; the authoritative reusable verdict consumes the actual validate job result and retains policy and secret scans.",
+  "archetype": "Shifting the burden from observed system evidence to a single green indicator.",
+  "intervention": "Declare source-bound checks, retain complete criteria and gaps, add semantic negative controls, and preserve human merge and existing operational boundaries.",
+  "leading_indicators": [
+    "All declared check receipts succeed for the exact source revision.",
+    "Failed, cancelled and skipped validation cannot yield a successful authoritative verdict.",
+    "Readiness validation rejects partial and unverified dimensions."
+  ],
+  "transfer": "Apply scoped acceptance and evidence accounting to other owned projects without equating synthetic CI with deployed operational outcomes."
+}

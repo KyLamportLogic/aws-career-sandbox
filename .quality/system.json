@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "system_id": "aws-career-sandbox",
+  "intended_use": "Credential-free validation of bounded AWS career portfolio templates; no running workloads or deployment authority.",
+  "environment": "portable-offline-validation",
+  "requirements": [
+    {
+      "path": "README.md",
+      "sha256": "5e84b78b6a1e13a2ab5283d69fbee8dc90d4cee083080f38d09e5cabd7b476d7"
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "783d2f23ed95f18d619d331213e30676622ff47cd3a76c393af1279fd7b3f548"
+    },
+    {
+      "path": "docs/runbook.md",
+      "sha256": "e6988031dad7dd89cd9b55007f588aa75d58c5e0490e48bda811bce9021faa33"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "6d7c69e60d1996535e53e040fa15f38d309ed755de9706c00af1c4e35be6ea01"
+    },
+    {
+      "path": "docs/quality-evidence.md",
+      "sha256": "5a1639a41808b8cb2c8f437c55d248d1fdc0827cbcc352546c9ce868abdbc343"
+    }
+  ],
+  "checks": {
+    "typecheck": {
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "timeout_seconds": 180,
+      "inputs": [
+        "package.json",
+        "package-lock.json",
+        "tsconfig.json",
+        "bin/**/*.ts",
+        "lib/**/*.ts",
+        "test/**/*.ts"
+      ],
+      "scope": "TypeScript compile-time checks; no deployment"
+    },
+    "template-tests": {
+      "command": [
+        "npm",
+        "test"
+      ],
+      "timeout_seconds": 300,
+      "inputs": [
+        "package.json",
+        "package-lock.json",
+        "tsconfig.json",
+        "bin/**/*.ts",
+        "lib/**/*.ts",
+        "test/**/*.ts",
+        "bootstrap/github-oidc.yaml",
+        ".github/workflows/deploy.yml"
+      ],
+      "scope": "Synthetic-account CDK templates, exact trust/image-policy boundaries and deliberately invalid template controls"
+    },
+    "synthesis": {
+      "command": [
+        "npm",
+        "run",
+        "synth",
+        "--",
+        "--no-lookups",
+        "--no-notices"
+      ],
+      "timeout_seconds": 300,
+      "inputs": [
+        "package.json",
+        "package-lock.json",
+        "tsconfig.json",
+        "bin/**/*.ts",
+        "lib/**/*.ts",
+        "test/**/*.ts",
+        "cdk.json"
+      ],
+      "scope": "Strict local synthesis and cdk-nag; context lookups disabled, no AWS calls or deployment"
+    },
+    "deployment-controls": {
+      "command": [
+        "{python}",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "test",
+        "-p",
+        "test_deployment_checks.py",
+        "-v"
+      ],
+      "timeout_seconds": 120,
+      "inputs": [
+        "scripts/verify_deployment_checks.py",
+        "test/test_deployment_checks.py",
+        ".github/workflows/deploy.yml"
+      ],
+      "scope": "Mocked GitHub API/context controls for exact-revision manual deployment evidence; no provider or actual GitHub call"
+    }
+  },
+  "dimensions": {
+    "correctness": {
+      "acceptance_criteria": [
+        "Offline template behavior and types satisfy the bounded sandbox requirements."
+      ],
+      "check_ids": [
+        "typecheck",
+        "template-tests",
+        "synthesis"
+      ],
+      "gaps": [
+        "Synthetic templates are checked; deployed AWS behavior is not observed."
+      ],
+      "next_check": "Review exact synthesized artifacts before any separately authorized manual deployment."
+    },
+    "security": {
+      "acceptance_criteria": [
+        "Generated publisher trust binds exact repository, audience and environment; image mutation stays repository-scoped."
+      ],
+      "check_ids": [
+        "template-tests",
+        "deployment-controls"
+      ],
+      "gaps": [
+        "Actual GitHub environment approval, deployed IAM and cloud-side denial are external evidence."
+      ],
+      "next_check": "Independently verify deployed trust and environment protections under operator authority."
+    },
+    "reliability": {
+      "acceptance_criteria": [
+        "Local synthesis and policy controls execute within bounded CI timeouts."
+      ],
+      "check_ids": [
+        "template-tests",
+        "synthesis"
+      ],
+      "gaps": [
+        "Deployment retry, interruption and rollback have not been exercised."
+      ],
+      "next_check": "Run an approved disposable deployment recovery exercise before relying on operational recovery."
+    },
+    "data_integrity": {
+      "acceptance_criteria": [
+        "The sandbox must not introduce running workloads or user-data resources."
+      ],
+      "check_ids": [
+        "template-tests"
+      ],
+      "gaps": [
+        "No database or user-data restore is exercised; deployment artifacts still require provenance review."
+      ],
+      "next_check": "Confirm any future stateful resource has an independently tested restore plan."
+    },
+    "observability": {
+      "acceptance_criteria": [
+        "Synthesized task logs have bounded retention and cost notifications are declared."
+      ],
+      "check_ids": [
+        "template-tests",
+        "synthesis"
+      ],
+      "gaps": [
+        "Delivery of live logs, budget alerts and anomaly notifications is not verified by templates."
+      ],
+      "next_check": "Observe operator-approved notification delivery and retained audit artifacts."
+    },
+    "delivery": {
+      "acceptance_criteria": [
+        "Frozen dependency installation, actual validation and complete eight-dimension evidence precede any delivery claim."
+      ],
+      "check_ids": [
+        "typecheck",
+        "template-tests",
+        "synthesis",
+        "deployment-controls"
+      ],
+      "gaps": [
+        "CI evidence is scoped to source/templates; only a human approves and performs deployment."
+      ],
+      "next_check": "Review exact-head CI artifacts and retain the existing human deployment boundary."
+    },
+    "operations": {
+      "acceptance_criteria": [
+        "The manual-only protected-environment deployment and documented rollback boundary remain required."
+      ],
+      "check_ids": [
+        "deployment-controls"
+      ],
+      "gaps": [
+        "No deployment, operator approval, rollback or cloud inventory operation is performed by validation."
+      ],
+      "next_check": "Follow the operator runbook only under separate explicit deployment authority."
+    },
+    "outcome_evidence": {
+      "acceptance_criteria": [
+        "Portfolio claims distinguish inert demonstration infrastructure from running product traffic or customer outcomes."
+      ],
+      "check_ids": [],
+      "gaps": [
+        "No customer use, revenue or deployed cost outcome is measured."
+      ],
+      "next_check": "Collect independently attributable portfolio/use evidence without treating synthetic checks as customer proof."
+    }
+  }
+}

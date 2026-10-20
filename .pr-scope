@@ -1,0 +1,13 @@
+.a11y.yml
+.pr-scope
+.github/workflows/accessibility.yml
+.github/workflows/deploy.yml
+.github/workflows/system-quality.yml
+.gitignore
+.quality/system.json
+.systems-thinking/contracts/2026-10-18-system-quality.json
+AGENTS.md
+docs/quality-evidence.md
+scripts/verify_deployment_checks.py
+test/security-boundaries.test.ts
+test/test_deployment_checks.py
