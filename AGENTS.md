@@ -52,3 +52,13 @@ Agents never merge, approve, or deploy their own work.
 10. **Supply chain.** Pin third-party GitHub Actions to a full commit SHA. Every workflow declares a least-privilege `permissions:` block. Untrusted event data (PR title, body, branch name) goes through `env:` and is never spliced into `run:` scripts.
 11. **Human judgment stays human.** Do not invent users, traction, metrics, or personal facts. Stop and hand formative, consequential (irreversible), and authorship decisions to Ky.
 12. **Deploys follow governance.** Deploy jobs run only from `main` after CI/governance passed: `workflow_run` on success, same-repo `push` events only, never fork PR code with secrets.
+
+## AWS career sandbox agent steering
+
+Read `README.md`, `docs/architecture.md`, and `docs/runbook.md` before changing infrastructure.
+
+This repository is deliberately bounded: synthesize and test infrastructure, but do not create running product compute or broaden scope beyond the documented sandbox.
+
+AI may directly handle reversible code, tests, CDK refactors, documentation, and CI mechanics. Deployment is consequential: do not run `cdk bootstrap`, `cdk deploy`, or otherwise create/modify AWS resources outside the approved GitHub Actions deployment path.
+
+Verify with `npm run validate`. Do not claim resources are deployed or live from synthesis output alone.

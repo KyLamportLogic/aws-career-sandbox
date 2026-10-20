@@ -1,0 +1,14 @@
+{
+  "type": "SYSTEMS_THINKING_CONTRACT",
+  "title": "Repository agent steering",
+  "scope": [
+    "AGENTS.md"
+  ],
+  "event": "Agents change this sandbox without reading its bounded infrastructure rules.",
+  "pattern": "Generic agent defaults drift into bootstrap or deploy actions the sandbox does not allow.",
+  "structure": "Steering lived in README and runbooks, separate from the file agents read first.",
+  "archetype": "Shifting the Burden: reviewers catch out-of-bounds changes after they are written.",
+  "intervention": "Keep the shared governance section and add the sandbox steering rules beneath it.",
+  "leading_indicators": "AGENTS.md contains the AI-GOVERNANCE marker and the sandbox steering section.",
+  "transfer": "Repo-specific rules stay below the shared governance section and can only tighten it."
+}
