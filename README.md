@@ -29,4 +29,9 @@ uploads deployment evidence.
 The one-time AWS trust ceremony is documented separately because OIDC cannot
 create the role that is required to obtain OIDC credentials.
 
+## Story
+
+SAA-C03 is the next certification and is not earned. The claim boundary for
+this repository is [the cloud story](docs/CLOUD-STORY.md).
+
 MIT licensed.
