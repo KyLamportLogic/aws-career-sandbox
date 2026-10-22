@@ -1,0 +1,14 @@
+{
+  "type": "SYSTEMS_THINKING_CONTRACT",
+  "title": "WCAG 2.2 Level A accessibility gate",
+  "scope": [
+    ".github/workflows/accessibility.yml"
+  ],
+  "event": "Interface changes can merge with no deterministic WCAG 2.2 Level A result.",
+  "pattern": "Accessibility depends on someone remembering to audit, so regressions merge between reviews.",
+  "structure": "Repository CI validated the build and had no shared accessibility or diff-hygiene workflow.",
+  "archetype": "Shifting the Burden: manual review substitutes for a missing structural gate.",
+  "intervention": "Call the SHA-pinned reusable accessibility and diff-hygiene workflows, and declare ui:false so the no-UI path stays explicit.",
+  "leading_indicators": "Pull requests show level-a and diff-hygiene results from the pinned reusable workflows.",
+  "transfer": "Other repositories can call the same pinned workflows with their own .a11y.yml declaration."
+}
